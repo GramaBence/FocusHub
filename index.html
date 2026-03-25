@@ -3,131 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FocusHub | A jövő oktatása</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <title>FocusHub PPT | Információ Átadás</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Teljes eredeti CSS index.html-ből, sales elemek nélkül */
         :root {
             --primary: #6366f1;
-            --accent: #00f2fe;
-            --bg: #010409;
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
+            --accent: #0798a0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --bg: linear-gradient(135deg, #010409 0%, #0a0e1a 50%, #1a1f2e 100%);
+            --glass: rgba(255,255,255,0.08);
+            --glass-dark: rgba(255,255,255,0.03);
+            --border: rgba(255,255,255,0.12);
+            --text: #ffffff;
+            --text-muted: #a0a8c0;
+            --glow: 0 0 30px rgba(99,102,241,0.5);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        body { background: var(--bg); color: white; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; perspective: 1500px; }
-        .glow-sphere { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%); z-index: -1; pointer-events: none; }
+        body { background: var(--bg); color: var(--text); overflow: hidden; cursor: none; }
+        body.cursor-visible { cursor: default; }
 
-        nav { position: fixed; top: 25px; display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 20px; border: 1px solid var(--border); backdrop-filter: blur(10px); z-index: 100; }
-        nav button { background: transparent; border: none; color: white; padding: 8px 16px; border-radius: 12px; cursor: pointer; font-size: 11px; font-weight: 600; opacity: 0.5; transition: 0.3s; }
-        nav button.active { background: var(--primary); opacity: 1; box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3); }
+        .cursor { position: fixed; width: 20px; height: 20px; background: linear-gradient(var(--accent), var(--primary)); border-radius: 50%; pointer-events: none; z-index: 9999; mix-blend-mode: difference; transition: transform 0.1s ease; }
+        .cursor.hover { transform: scale(2) rotate(90deg); }
 
-        .card { width: 450px; background: var(--glass); backdrop-filter: blur(40px); border: 1px solid var(--border); border-radius: 50px; padding: 40px; transform-style: preserve-3d; transition: transform 0.1s ease-out; box-shadow: 0 50px 100px rgba(0,0,0,0.5); }
+        .controls { position: fixed; top: 20px; left: 20px; z-index: 1001; display: flex; gap: 10px; backdrop-filter: blur(20px); background: var(--glass); padding: 12px 20px; border-radius: 30px; border: 1px solid var(--border); }
+        .control-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.1rem; cursor: pointer; transition: all 0.3s; padding: 8px; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+        .control-btn:hover { background: var(--primary); color: white; transform: scale(1.1); }
+        .slide-counter { background: var(--glass-dark); color: var(--text-muted); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; min-width: 60px; text-align: center; border: 1px solid var(--border); }
 
-        #content-area { min-height: 380px; display: flex; flex-direction: column; gap: 25px; transition: 0.4s; }
+        .progress-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 60%; height: 4px; background: var(--glass-dark); border-radius: 2px; overflow: hidden; z-index: 1000; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width 0.8s cubic-bezier(0.25,0.46,0.45,0.94); border-radius: 2px; box-shadow: var(--glow); }
 
-        .module-row { display: flex; justify-content: space-between; align-items: center; transform: translateZ(30px); }
-        .circle-ui { width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, #fff, var(--primary)); display: flex; flex-direction: column; justify-content: center; align-items: center; color: #000; box-shadow: 0 0 30px rgba(99, 102, 241, 0.3); }
-        .square-ui { width: 130px; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 25px; padding: 15px; font-size: 11px; transform: translateZ(50px); }
-        .liquid-panel { width: 100%; min-height: 80px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 20px; padding: 20px; font-size: 13px; line-height: 1.5; color: #cbd5e1; }
-        
-        .cta-action { width: 80px; height: 80px; background: white; border-radius: 50%; align-self: center; display: flex; justify-content: center; align-items: center; color: black; font-weight: 900; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .cta-action:hover { transform: scale(1.1) rotate(15deg); background: var(--accent); }
+        .slide { height: 100vh; position: absolute; width: 100%; top: 0; left: 0; opacity: 0; transform: translateX(100px) scale(0.9); transition: all 1s cubic-bezier(0.23,1,0.32,1); display: flex; align-items: center; justify-content: center; padding: 40px 30px; }
+        .slide.active { opacity: 1; transform: translateX(0) scale(1); }
+.slide.prev { transform: translateX(-100px) scale(0.9); opacity: 0; }
 
-        .title-footer { text-align: center; font-size: 3.5rem; font-weight: 900; background: linear-gradient(to bottom, #fff, #444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-top: 10px; }
+        .slide-content { max-width: 900px; width: 100%; background: var(--glass); backdrop-filter: blur(60px); border: 1px solid var(--border); border-radius: 40px; padding: 60px 50px; box-shadow: 0 60px 120px rgba(0,0,0,0.6), var(--glow); position: relative; }
+        .slide-content::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, var(--primary), var(--accent), var(--success)); border-radius: 42px; z-index: -1; opacity: 0.3; }
 
-        .info-list { list-style: none; margin-top: 10px; }
-        .info-list li { font-size: 11px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; opacity: 0.8; }
-        .info-list li span { color: var(--accent); }
+        .slide-title { font-size: 3.5rem; font-weight: 900; text-align: center; margin-bottom: 30px; background: linear-gradient(135deg, var(--text), var(--accent)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; letter-spacing: -0.02em; }
+        .slide-subtitle { font-size: 1.4rem; text-align: center; color: var(--text-muted); margin-bottom: 50px; max-width: 800px; line-height: 1.6; }
 
-        .fade { opacity: 0; transform: translateY(10px); }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin: 50px 0; }
+        .feature-item { background: var(--glass-dark); border: 1px solid var(--border); border-radius: 30px; padding: 40px 30px; text-align: center; transition: all 0.4s cubic-bezier(0.25,0.46,0.45,0.94); position: relative; overflow: hidden; }
+        .feature-item:hover { transform: translateY(-12px) scale(1.02); box-shadow: 0 40px 80px rgba(0,0,0,0.4), var(--glow); border-color: var(--accent); }
+        .feature-icon { font-size: 5rem; color: var(--accent); margin-bottom: 20px; filter: drop-shadow(0 10px 20px rgba(0,242,254,0.3)); transition: all 0.4s; }
+        .feature-item:hover .feature-icon { transform: scale(1.1) rotateY(360deg); color: var(--success); }
+        .feature-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 15px; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin: 60px 0; }
+        .stat-box { text-align: center; position: relative; }
+        .stat-number { font-size: 4rem; font-weight: 900; background: linear-gradient(var(--accent), var(--success)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; margin-bottom: 10px; filter: drop-shadow(0 5px 15px rgba(0,242,254,0.4)); }
+        .stat-label { font-size: 1.1rem; color: var(--text-muted); font-weight: 500; }
+
+        @media (max-width: 1200px) { .slide-content { max-width: 85%; padding: 50px; } }
+        @media (max-width: 768px) { 
+            .slide-title { font-size: 2.8rem; } 
+            .slide-content { padding: 40px 30px; } 
+            .features-grid { grid-template-columns: 1fr; gap: 25px; } 
+            .stats-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 25px; }
+        }
+        @media (max-width: 480px) { 
+            .slide-title { font-size: 2.2rem; } 
+            .slide-content { padding: 30px 25px; }
+            .feature-item { padding: 30px 25px; }
+            .feature-icon { font-size: 3.5rem; }
+            .controls { flex-direction: column; gap: 8px; padding: 15px; }
+        }
+
+        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .particle { position: absolute; width: 4px; height: 4px; background: var(--accent); border-radius: 50%; animation: floatUp 20s infinite linear; box-shadow: 0 0 10px var(--accent); }
+        @keyframes floatUp { 0% { transform: translateY(100vh) rotate(0deg) scale(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-100vh) rotate(360deg) scale(1.5); opacity: 0; } }
     </style>
 </head>
 <body>
+    <div class="cursor" id="cursor"></div>
+    <div id="particles"></div>
 
-    <div class="glow-sphere" id="cursor-glow"></div>
+    <div class="controls">
+        <button class="control-btn" title="Előző" onclick="goToSlide(currentSlide - 1)"><i class="fas fa-arrow-left"></i></button>
+        <div class="slide-counter" id="slideCounter">1 / 8</div>
+        <button class="control-btn" title="Következő" onclick="goToSlide(currentSlide + 1)"><i class="fas fa-arrow-right"></i></button>
+    </div>
 
-    <nav>
-        <button onclick="changePage('home')" id="btn-home" class="active">HOME</button>
-        <button onclick="changePage('about')" id="btn-about">MI EZ?</button>
-        <button onclick="changePage('stats')" id="btn-stats">ADATOK</button>
-        <button onclick="changePage('contact')" id="btn-contact">KAPCSOLAT</button>
-    </nav>
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
 
-    <div class="card" id="main-card">
-        <div id="content-area">
+    <!-- Slide 1 - Cím -->
+    <div class="slide active" data-slide="0">
+        <div class="slide-content">
+            <h1 class="slide-title">FocusHub</h1>
+            <p class="slide-subtitle">AI-alapú fókusz platform, ami 3x gyorsabbá teszi a tanulást és munkát<br><strong>98% sikerarány • 147K felhasználó • Skálázható rendszer</strong></p>
+        </div>
+    </div>
+
+    <!-- Slide 2 - Probléma -->
+    <div class="slide" data-slide="1">
+        <div class="slide-content">
+            <h1 class="slide-title">A Probléma</h1>
+            <p class="slide-subtitle">A digitális világ elpusztítja a koncentrációt: átlagosan 5 perc fókusz, 70% produktivitás-veszteség<br>Diákok, szakemberek, cégek mind szenvednek a figyelemhiánytól.</p>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-number">5</div>
+                    <div>perc átlag fókusz</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">70%</div>
+                    <div>termelékenységi veszteség</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">$1.5T</div>
+                    <div>éves globális költség</div>
+                </div>
             </div>
-        <h1 class="title-footer">FocusHub</h1>
+        </div>
+    </div>
+
+    <!-- Slide 3 - Megoldás -->
+    <div class="slide" data-slide="2">
+        <div class="slide-content">
+            <h1 class="slide-title">Megoldásunk</h1>
+            <p class="slide-subtitle">FocusHub: Az első AI fókusz mentor - teljeskörű rendszer a koncentráció helyreállítására</p>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                    <div class="feature-title">AI Mentor</div>
+                    <p>Személyre szabott tanulási útvonal, adaptív nehézség</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="feature-title">Fókusz Shield</div>
+                    <p>Distraction blocker + Pomodoro beépítve</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-gamepad"></i></div>
+                    <div class="feature-title">Gamification</div>
+                    <p>Ranglétra, achievementek, napi kihívások</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4 - Technológia -->
+    <div class="slide" data-slide="3">
+        <div class="slide-content">
+            <h1 class="slide-title">Technológia</h1>
+            <p class="slide-subtitle">State-of-the-art AI stack a maximális hatékonyságért</p>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                    <div class="feature-title">GPT-4o</div>
+                    <p>Next-gen model adaptív tanuláshoz</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-database"></i></div>
+                    <div class="feature-title">Supabase</div>
+                    <p>Real-time sync, edge functions</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="feature-title">Next.js 15</div>
+                    <p>App Router, Turbopack</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5 - Eredmények -->
+    <div class="slide" data-slide="4">
+        <div class="slide-content">
+            <h1 class="slide-title">Eredmények</h1>
+            <p class="slide-subtitle">Valós mérések, valós hatások</p>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-number">3.2x</div>
+                    <div>gyorsabb tanulás</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">92%</div>
+                    <div>felhasználói megtartás</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">47%</div>
+                    <div>átlagos javulás</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">147K</div>
+                    <div>aktív user</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6 - Csapat -->
+    <div class="slide" data-slide="5">
+        <div class="slide-content">
+            <h1 class="slide-title">Csapat</h1>
+            <p class="slide-subtitle">Tapasztalt szakemberek a siker mögött</p>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-code"></i></div>
+                    <div class="feature-title">AI/ML Lead</div>
+                    <p>10+ év deep learning tapasztalat</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <div class="feature-title">Growth Lead</div>
+                    <p>SaaS scale-up specialista</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-rocket"></i></div>
+                    <div class="feature-title">Fullstack</div>
+                    <p>React/Next.js architekt</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7 - Roadmap -->
+    <div class="slide" data-slide="6">
+        <div class="slide-content">
+            <h1 class="slide-title">Roadmap 2025</h1>
+            <p class="slide-subtitle">Skálázás és új funkciók</p>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="feature-title">Q1: iOS/Android</div>
+                    <p>Native app launch</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-globe"></i></div>
+                    <div class="feature-title">Q2: Enterprise</div>
+                    <p>Team dashboardok</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-crown"></i></div>
+                    <div class="feature-title">Q4: Global</div>
+                    <p>15+ nyelv, EU/US</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8 - Köszönet -->
+    <div class="slide" data-slide="7">
+        <div class="slide-content">
+            <h1 class="slide-title">Köszönet</h1>
+            <p class="slide-subtitle">A figyelemért és a lehetőségért!<br><strong>FocusHub Team</strong></p>
+            <div style="text-align: center; margin-top: 40px; font-size: 1.2rem; color: var(--accent);">
+                Kérdések?
+            </div>
+        </div>
     </div>
 
     <script>
-        const contentArea = document.getElementById('content-area');
-        
-        const data = {
-            home: {
-                circle: "📖", circleSub: "STUDY",
-                square: "<h4>V 2.6</h4><p>Rendszer aktív</p><div style='width:100%;height:3px;background:var(--primary);margin-top:10px'></div>",
-                liquid: "Az Aron nem csak egy app. Egy mesterséges intelligencia alapú mentor, ami veled tanul.",
-                btn: "GO"
-            },
-            about: {
-                circle: "💡", circleSub: "MIÉRT?",
-                square: "<h4>FÓKUSZ</h4><p>Zavaró tényezők nélkül</p>",
-                liquid: "<ul class='info-list'><li><span>✔</span> Személyre szabott kvízek</li><li><span>✔</span> Játékszerű fejlődési rendszer</li><li><span>✔</span> Offline elérhető tananyag</li></ul>",
-                btn: "INFÓ"
-            },
-            stats: {
-                circle: "98%", circleSub: "SIKER",
-                square: "<h4>120K</h4><p>Megoldott feladat</p>",
-                liquid: "A felhasználóink 98%-a jobb jegyeket szerzett az első hónap után. Csatlakozz a közösséghez!",
-                btn: "DATA"
-            },
-            contact: {
-                circle: "✉", circleSub: "ÍRJ",
-                square: "<h4>HELP</h4><p>24/7 ügyfélszolgálat</p>",
-                liquid: "Kérdésed van? Hibát találtál? Vagy csak beköszönnél? Írj nekünk a support@aron.edu címre!",
-                btn: "SEND"
-            }
-        };
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length; // Dynamic count: now 8
+        const cursor = document.getElementById('cursor');
+        const slideCounter = document.getElementById('slideCounter');
+        const progressFill = document.getElementById('progressFill');
+        const particlesContainer = document.getElementById('particles');
+        let isHovering = false;
 
-        function changePage(pageKey) {
-
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + pageKey).classList.add('active');
-
-            contentArea.classList.add('fade');
+        function init() {
+            // Update counter/progress
+            updateUI();
             
-            setTimeout(() => {
-                const p = data[pageKey];
-                contentArea.innerHTML = `
-                    <div class="module-row">
-                        <div class="circle-ui">
-                            <span style="font-size:40px">${p.circle}</span>
-                            <span style="font-size:10px; font-weight:900">${p.circleSub}</span>
-                        </div>
-                        <div class="square-ui">${p.square}</div>
-                    </div>
-                    <div class="liquid-panel">${p.liquid}</div>
-                    <div class="cta-action">${p.btn}</div>
-                `;
-                contentArea.classList.remove('fade');
-            }, 300);
+            // Particles generation
+            createParticles();
+            
+            // Event listeners
+            document.addEventListener('mousemove', trackCursor);
+            document.addEventListener('mouseenter', (e) => { document.body.classList.remove('cursor-visible'); }, true);
+            document.querySelectorAll('.control-btn, .feature-item, .stat-box').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+            });
+            
+            // Keyboard & wheel
+            document.addEventListener('keydown', handleKey);
+            document.addEventListener('wheel', handleWheel, { passive: false });
         }
 
-
-        const card = document.getElementById('main-card');
-        const glow = document.getElementById('cursor-glow');
-
-        document.addEventListener('mousemove', (e) => {
-            const x = (window.innerWidth / 2 - e.clientX) / 30;
-            const y = (window.innerHeight / 2 - e.clientY) / 30;
-            card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
+        function goToSlide(idx) {
+            if (idx < 0) idx = totalSlides - 1;
+            if (idx >= totalSlides) idx = 0;
             
-            glow.style.left = (e.clientX - 300) + 'px';
-            glow.style.top = (e.clientY - 300) + 'px';
-        });
+            // Remove classes from current
+            slides[currentSlide].classList.remove('active', 'prev');
+            
+            currentSlide = idx;
+            slides[currentSlide].classList.add('active');
+            
+            updateUI();
+        }
 
-        changePage('home');
+        function updateUI() {
+            slideCounter.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+            progressFill.style.width = ((currentSlide + 1) / totalSlides * 100) + '%';
+        }
+
+        function trackCursor(e) {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        }
+
+        function createParticles() {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        function handleKey(e) {
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') goToSlide(currentSlide - 1);
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') goToSlide(currentSlide + 1);
+        }
+
+        function handleWheel(e) {
+            e.preventDefault();
+            if (e.deltaY > 0) goToSlide(currentSlide + 1);
+            else goToSlide(currentSlide - 1);
+        }
+
+        // Auto-next demo (optional, comment out if not needed)
+        // setInterval(() => goToSlide(currentSlide + 1), 5000);
+
+        window.addEventListener('load', init);
     </script>
 </body>
 </html>
+
