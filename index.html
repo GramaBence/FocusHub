@@ -17,21 +17,19 @@
             --text-muted: #94a3b8;
         }
 
-        /* Alapbeállítások & Scroll Snap */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         html { scroll-behavior: smooth; }
         body { 
             background-color: var(--bg); 
             color: var(--text); 
             overflow-x: hidden;
-            cursor: none; /* Egyedi kurzor miatt */
+            transition: background 0.8s ease;
         }
 
         /* Egyedi Kurzor */
         .cursor {
             position: fixed;
-            width: 20px;
-            height: 20px;
+            width: 20px; height: 20px;
             background: var(--accent);
             border-radius: 50%;
             pointer-events: none;
@@ -43,283 +41,224 @@
 
         /* Loader */
         .loader {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background: var(--bg);
             z-index: 10000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; justify-content: center; align-items: center;
             transition: opacity 0.5s ease;
         }
         .loader.hidden { opacity: 0; pointer-events: none; }
 
-        /* Navigáció & Nyelvváltó */
+        /* Navigáció */
         nav {
-            position: fixed;
-            top: 0; width: 100%;
+            position: fixed; top: 0; width: 100%;
             padding: 20px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
             z-index: 100;
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
-        }
-        .lang-switcher button {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            color: white;
-            padding: 5px 12px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-left: 5px;
         }
 
         /* Szekciók */
         section {
             min-height: 100vh;
             padding: 100px 10%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transition: background 0.8s ease;
+            display: flex; flex-direction: column; justify-content: center;
         }
 
-        /* Szűrő gombok */
-        .filters {
-            margin-bottom: 30px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+        /* Kártyák és Gombok */
+        .filters { margin-bottom: 30px; display: flex; gap: 10px; flex-wrap: wrap; }
         .filter-btn {
-            padding: 10px 20px;
-            border-radius: 30px;
-            border: 1px solid var(--border);
-            background: var(--card-bg);
-            color: var(--text);
-            cursor: pointer;
-            transition: 0.3s;
+            padding: 10px 20px; border-radius: 30px;
+            border: 1px solid var(--border); background: var(--card-bg);
+            color: var(--text); cursor: pointer; transition: 0.3s;
         }
         .filter-btn.active { background: var(--primary); border-color: var(--primary); }
 
-        /* Tananyag kártyák (Grid) */
         .course-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;
         }
         .course-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 20px;
-            position: relative;
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 20px; padding: 20px; position: relative;
+            cursor: pointer; transition: 0.3s;
         }
         .course-card:hover { transform: translateY(-10px); border-color: var(--accent); }
-        .badge {
-            position: absolute;
-            top: 15px; right: 15px;
-            background: var(--primary);
-            font-size: 0.7rem;
-            padding: 4px 10px;
-            border-radius: 10px;
-        }
 
-        /* Modális ablak */
+        /* Demo/Timer Stílus */
+        .demo-container {
+            max-width: 500px; margin: 40px auto;
+            background: var(--card-bg); padding: 40px;
+            border-radius: 30px; border: 2px solid var(--primary);
+            text-align: center; box-shadow: 0 20px 50px rgba(99, 102, 241, 0.1);
+        }
+        #timer-display { font-size: 5rem; font-weight: 900; margin-bottom: 20px; }
+
+        /* Modális */
         .modal {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background: rgba(0,0,0,0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            padding: 20px;
+            display: none; justify-content: center; align-items: center;
+            z-index: 2000; padding: 20px;
         }
         .modal-content {
-            background: #1a1f2e;
-            max-width: 800px;
-            width: 100%;
-            border-radius: 30px;
-            padding: 40px;
-            position: relative;
+            background: #1a1f2e; max-width: 600px; width: 100%;
+            border-radius: 30px; padding: 40px; position: relative;
         }
-        .modal-img {
-            width: 100%;
-            height: 250px;
-            background: #334155;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            object-fit: cover;
-        }
-
-        /* Back to top */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px; right: 30px;
-            width: 50px; height: 50px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: 0.3s;
-            text-decoration: none;
-            color: white;
-        }
-        .back-to-top.visible { opacity: 1; }
 
         @media (max-width: 768px) {
-            body { cursor: default; }
             .cursor { display: none; }
             section { padding: 80px 5%; }
         }
     </style>
 </head>
-<body data-lang="hu">
+<body>
 
     <div class="loader" id="loader"><h1>FocusHub_</h1></div>
     <div class="cursor" id="cursor"></div>
 
     <nav>
         <h2 style="font-weight: 900; letter-spacing: -1px;">FOCUS<span style="color:var(--accent)">HUB</span></h2>
-        <div class="lang-switcher">
-            <button onclick="changeLang('hu')">HU</button>
-            <button onclick="changeLang('en')">EN</button>
+        <div>
+            <a href="#demo" class="filter-btn active" style="text-decoration: none;">Kipróbálom</a>
         </div>
     </nav>
 
     <section id="hero" data-bg="#05070a">
-        <h1 style="font-size: clamp(2.5rem, 8vw, 5rem); line-height: 1;">Okosabb tanulás.<br>Kevesebb zaj.</h1>
-        <p style="color: var(--text-muted); margin-top: 20px; max-width: 600px;">
-            Az AI-alapú FocusHub segít visszanyerni a koncentrációdat és rendszerezni a tudásodat.
+        <h1 style="font-size: clamp(2.5rem, 8vw, 5rem); line-height: 1.1;">Tanulj okosabban,<br><span style="color:var(--primary)">ne keményebben.</span></h1>
+        <p style="color: var(--text-muted); margin-top: 20px; max-width: 600px; font-size: 1.2rem;">
+            Interaktív eszközök és mesterséges intelligencia segít abban, hogy a maximumot hozd ki magadból.
         </p>
     </section>
 
-    <section id="courses" data-bg="#0a0e1a">
-        <h2 style="margin-bottom: 40px;" data-key="course-title">Elérhető kurzusok</h2>
-        
-        <div class="filters">
-            <button class="filter-btn active" onclick="filterItems('all')">Mind</button>
-            <button class="filter-btn" onclick="filterItems('web')">Webfejlesztés</button>
-            <button class="filter-btn" onclick="filterItems('matek')">Matematika</button>
-            <button class="filter-btn" onclick="filterItems('ai')">Mesterséges Intelligencia</button>
+    <section id="demo" data-bg="#0f172a">
+        <div style="text-align: center;">
+            <h2 style="font-size: 2.5rem; margin-bottom: 10px;">Interaktív Labor</h2>
+            <p style="color: var(--text-muted);">Próbáld ki a beépített Pomodoro időzítőnket!</p>
         </div>
 
-        <div class="course-grid" id="courseGrid">
-            <div class="course-card" data-cat="web" onclick="openModal('Modern Frontend', 'Tanuld meg a Next.js 15 alapjait az alapoktól.', 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800')">
-                <span class="badge">NEW</span>
+        <div class="demo-container">
+            <div id="timer-display">25:00</div>
+            <div class="timer-controls">
+                <button class="filter-btn active" id="startBtn" onclick="toggleTimer()">Indítás</button>
+                <button class="filter-btn" onclick="resetTimer()">Alaphelyzet</button>
+            </div>
+            <p id="timer-status" style="margin-top: 20px; color: var(--accent); font-weight: 600; opacity: 0; transition: 0.3s;">Mély fókusz aktív...</p>
+        </div>
+    </section>
+
+    <section id="courses" data-bg="#0a0e1a">
+        <h2 style="margin-bottom: 40px;">Elérhető kurzusok</h2>
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterItems('all')">Mind</button>
+            <button class="filter-btn" onclick="filterItems('web')">Web</button>
+            <button class="filter-btn" onclick="filterItems('matek')">Matek</button>
+        </div>
+
+        <div class="course-grid">
+            <div class="course-card" data-cat="web" onclick="openModal('Modern Frontend', 'A legújabb technológiák: React 19 és Next.js.')">
                 <h3>Modern Frontend</h3>
-                <p style="color: var(--text-muted); margin-top: 10px;">React, Next.js és Tailwind CSS mesterkurzus.</p>
+                <p style="color: var(--text-muted); margin-top: 10px;">Építs villámgyors appokat.</p>
             </div>
-            <div class="course-card" data-cat="matek" onclick="openModal('Diszkrét Matek', 'Halmazelmélet, logika és algoritmuselmélet egyszerűen.', 'https://images.unsplash.com/photo-1509228468518-180dd48a540f?w=800')">
-                <span class="badge">UPDATED</span>
+            <div class="course-card" data-cat="matek" onclick="openModal('Diszkrét Matek', 'Algoritmusok és logika közérthetően.')">
                 <h3>Diszkrét Matek</h3>
-                <p style="color: var(--text-muted); margin-top: 10px;">Mérnöki alapok vizsgára felkészítő modul.</p>
-            </div>
-            <div class="course-card" data-cat="ai" onclick="openModal('Prompt Engineering', 'Hogyan kommunikálj hatékonyan az LLM modellekkel.', 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800')">
-                <span class="badge">HOT</span>
-                <h3>Prompt Engineering</h3>
-                <p style="color: var(--text-muted); margin-top: 10px;">Hozd ki a maximumot a ChatGPT-ből és Gemini-ből.</p>
+                <p style="color: var(--text-muted); margin-top: 10px;">Mérnöki alapok mesterfokon.</p>
             </div>
         </div>
     </section>
 
     <div class="modal" id="modal" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <img src="" alt="" id="modalImg" class="modal-img">
             <h2 id="modalTitle"></h2>
             <p id="modalDesc" style="color: var(--text-muted); margin: 20px 0;"></p>
             <button class="filter-btn active" onclick="closeModal()">Bezárás</button>
         </div>
     </div>
 
-    <a href="#hero" class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></a>
-
     <script>
-        // 1. Loader kezelése
+        // Loader
         window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('loader').classList.add('hidden');
-            }, 1000);
+            setTimeout(() => document.getElementById('loader').classList.add('hidden'), 800);
         });
 
-        // 2. Kurzor követés
+        // Kurzor
         const cursor = document.getElementById('cursor');
         document.addEventListener('mousemove', e => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         });
-
         document.querySelectorAll('button, .course-card').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
         });
 
-        // 3. Dinamikus háttérváltó (Intersection Observer)
-        const sections = document.querySelectorAll('section');
+        // Háttérváltó
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    document.body.style.backgroundColor = entry.target.dataset.bg;
-                }
+                if(entry.isIntersecting) document.body.style.backgroundColor = entry.target.dataset.bg;
             });
         }, { threshold: 0.5 });
-        sections.forEach(s => observer.observe(s));
+        document.querySelectorAll('section').forEach(s => observer.observe(s));
 
-        // 4. Szűrés logika
+        // Pomodoro Timer Logika
+        let timeLeft = 25 * 60;
+        let timerId = null;
+        const display = document.getElementById('timer-display');
+        const startBtn = document.getElementById('startBtn');
+        const statusText = document.getElementById('timer-status');
+
+        function updateDisplay() {
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            display.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function toggleTimer() {
+            if (timerId) {
+                clearInterval(timerId);
+                timerId = null;
+                startBtn.innerText = "Folytatás";
+                statusText.style.opacity = "0";
+            } else {
+                statusText.style.opacity = "1";
+                startBtn.innerText = "Szünet";
+                timerId = setInterval(() => {
+                    timeLeft--;
+                    updateDisplay();
+                    if (timeLeft <= 0) {
+                        clearInterval(timerId);
+                        alert("Idő lejárt!");
+                        resetTimer();
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerId);
+            timerId = null;
+            timeLeft = 25 * 60;
+            updateDisplay();
+            startBtn.innerText = "Indítás";
+            statusText.style.opacity = "0";
+        }
+
+        // Egyéb funkciók
         function filterItems(cat) {
-            const cards = document.querySelectorAll('.course-card');
-            const btns = document.querySelectorAll('.filter-btn');
-            
-            btns.forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-
-            cards.forEach(card => {
-                if(cat === 'all' || card.dataset.cat === cat) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+            document.querySelectorAll('.course-card').forEach(card => {
+                card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'block' : 'none';
             });
         }
 
-        // 5. Modális kezelés (Képekkel és szöveggel)
-        function openModal(title, desc, img) {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalDesc').innerText = desc;
-            document.getElementById('modalImg').src = img;
+        function openModal(t, d) {
+            document.getElementById('modalTitle').innerText = t;
+            document.getElementById('modalDesc').innerText = d;
             document.getElementById('modal').style.display = 'flex';
         }
+
         function closeModal() {
             document.getElementById('modal').style.display = 'none';
         }
-
-        // 6. Többnyelvűség (Egyszerűsített szótár)
-        const dictionary = {
-            hu: { "course-title": "Elérhető kurzusok" },
-            en: { "course-title": "Available Courses" }
-        };
-
-        function changeLang(l) {
-            document.body.dataset.lang = l;
-            const title = document.querySelector('[data-key="course-title"]');
-            title.innerText = dictionary[l]["course-title"];
-        }
-
-        // 7. Back to top gomb megjelenítése
-        window.onscroll = function() {
-            const btn = document.getElementById('backToTop');
-            if (document.documentElement.scrollTop > 500) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
-        };
     </script>
 </body>
 </html>
