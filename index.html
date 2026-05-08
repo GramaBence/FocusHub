@@ -3,261 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FocusHub | Intelligens Tanulóplatform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <title>FocusHub | A jövő tanulási platformja</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #6366f1;
-            --accent: #0798a0;
-            --bg: #05070a;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-            --text: #ffffff;
-            --text-muted: #94a3b8;
+            --accent: #10b981;
+            --bg: #0b0f1a;
+            --panel: #161c2d;
+            --text: #f8fafc;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        html { scroll-behavior: smooth; }
-        body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            overflow-x: hidden;
-            transition: background 0.8s ease;
+        body { background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+
+        /* --- HERO SZEKCIÓ --- */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #1e293b 0%, #0b0f1a 100%);
+            padding: 20px;
         }
 
-        /* Egyedi Kurzor */
-        .cursor {
-            position: fixed;
-            width: 20px; height: 20px;
-            background: var(--accent);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: difference;
-            transition: transform 0.15s ease;
-        }
-        .cursor.hover { transform: scale(2.5); }
+        h1 { font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; line-height: 0.9; margin-bottom: 20px; }
+        .highlight { color: var(--primary); }
+        
+        .hero-p { max-width: 700px; font-size: 1.2rem; color: #94a3b8; margin-bottom: 30px; }
 
-        /* Loader */
-        .loader {
-            position: fixed; inset: 0;
-            background: var(--bg);
-            z-index: 10000;
-            display: flex; justify-content: center; align-items: center;
-            transition: opacity 0.5s ease;
+        .cta-group { display: flex; gap: 15px; }
+        .btn {
+            padding: 15px 35px; border-radius: 50px; border: none; font-weight: 600;
+            cursor: pointer; transition: 0.3s; text-decoration: none; font-size: 1rem;
         }
-        .loader.hidden { opacity: 0; pointer-events: none; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3); }
+        .btn-outline { border: 2px solid #334155; background: transparent; color: white; }
+        .btn:hover { transform: translateY(-3px); opacity: 0.9; }
 
-        /* Navigáció */
-        nav {
-            position: fixed; top: 0; width: 100%;
-            padding: 20px 5%;
-            display: flex; justify-content: space-between; align-items: center;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
+        /* --- FEATURE LIST (MIRŐL SZÓL AZ OLDAL?) --- */
+        .info-section { padding: 100px 10%; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
+        .feature-card { background: var(--panel); padding: 30px; border-radius: 20px; border: 1px solid #2d3748; }
+        .feature-card i { font-size: 2rem; color: var(--accent); margin-bottom: 15px; }
+
+        /* --- INTERAKTÍV DASHBOARD (KIPRÓBÁLOM) --- */
+        #demo { padding: 100px 5%; background: #0f172a; }
+        .dashboard {
+            max-width: 1100px; margin: 0 auto; background: var(--panel);
+            border-radius: 30px; border: 1px solid #334155; overflow: hidden;
+            display: grid; grid-template-columns: 300px 1fr 300px; height: 600px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
         }
 
-        /* Szekciók */
-        section {
-            min-height: 100vh;
-            padding: 100px 10%;
-            display: flex; flex-direction: column; justify-content: center;
-        }
+        /* Sidebar: Tasks */
+        .db-side { background: rgba(0,0,0,0.2); padding: 20px; border-right: 1px solid #334155; }
+        .task-item { background: #1e293b; padding: 10px; margin-bottom: 10px; border-radius: 10px; font-size: 0.8rem; display: flex; align-items: center; gap: 10px; }
 
-        /* Kártyák és Gombok */
-        .filters { margin-bottom: 30px; display: flex; gap: 10px; flex-wrap: wrap; }
-        .filter-btn {
-            padding: 10px 20px; border-radius: 30px;
-            border: 1px solid var(--border); background: var(--card-bg);
-            color: var(--text); cursor: pointer; transition: 0.3s;
-        }
-        .filter-btn.active { background: var(--primary); border-color: var(--primary); }
+        /* Main: Timer & AI */
+        .db-main { padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        #timer { font-size: 5rem; font-weight: 900; color: var(--primary); margin-bottom: 20px; }
 
-        .course-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;
+        /* Chat Window Overlay */
+        .ai-overlay {
+            position: absolute; bottom: 20px; right: 20px; left: 20px; height: 180px;
+            background: #1e293b; border-radius: 20px; border: 1px solid var(--primary);
+            display: flex; flex-direction: column; padding: 15px;
         }
-        .course-card {
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 20px; padding: 20px; position: relative;
-            cursor: pointer; transition: 0.3s;
-        }
-        .course-card:hover { transform: translateY(-10px); border-color: var(--accent); }
+        #chat-box { flex: 1; overflow-y: auto; font-size: 0.85rem; margin-bottom: 10px; color: #cbd5e1; }
+        .ai-input { display: flex; gap: 10px; }
+        input { flex: 1; background: #0b0f1a; border: 1px solid #334155; color: white; padding: 8px 15px; border-radius: 20px; outline: none; }
 
-        /* Demo/Timer Stílus */
-        .demo-container {
-            max-width: 500px; margin: 40px auto;
-            background: var(--card-bg); padding: 40px;
-            border-radius: 30px; border: 2px solid var(--primary);
-            text-align: center; box-shadow: 0 20px 50px rgba(99, 102, 241, 0.1);
-        }
-        #timer-display { font-size: 5rem; font-weight: 900; margin-bottom: 20px; }
-
-        /* Modális */
-        .modal {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.9);
-            display: none; justify-content: center; align-items: center;
-            z-index: 2000; padding: 20px;
-        }
-        .modal-content {
-            background: #1a1f2e; max-width: 600px; width: 100%;
-            border-radius: 30px; padding: 40px; position: relative;
-        }
-
-        @media (max-width: 768px) {
-            .cursor { display: none; }
-            section { padding: 80px 5%; }
+        @media (max-width: 900px) {
+            .dashboard { grid-template-columns: 1fr; height: auto; }
+            .db-side { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <div class="loader" id="loader"><h1>FocusHub_</h1></div>
-    <div class="cursor" id="cursor"></div>
-
-    <nav>
-        <h2 style="font-weight: 900; letter-spacing: -1px;">FOCUS<span style="color:var(--accent)">HUB</span></h2>
-        <div>
-            <a href="#demo" class="filter-btn active" style="text-decoration: none;">Kipróbálom</a>
+    <header>
+        <div style="background: rgba(99, 102, 241, 0.1); padding: 8px 20px; border-radius: 30px; color: var(--primary); margin-bottom: 20px; font-weight: 600;">
+            ✨ Verzió 2.0 - Most már AI támogatással
         </div>
-    </nav>
-
-    <section id="hero" data-bg="#05070a">
-        <h1 style="font-size: clamp(2.5rem, 8vw, 5rem); line-height: 1.1;">Tanulj okosabban,<br><span style="color:var(--primary)">ne keményebben.</span></h1>
-        <p style="color: var(--text-muted); margin-top: 20px; max-width: 600px; font-size: 1.2rem;">
-            Interaktív eszközök és mesterséges intelligencia segít abban, hogy a maximumot hozd ki magadból.
-        </p>
-    </section>
-
-    <section id="demo" data-bg="#0f172a">
-        <div style="text-align: center;">
-            <h2 style="font-size: 2.5rem; margin-bottom: 10px;">Interaktív Labor</h2>
-            <p style="color: var(--text-muted);">Próbáld ki a beépített Pomodoro időzítőnket!</p>
+        <h1>FOCUS<span class="highlight">HUB</span></h1>
+        <p class="hero-p">Ez nem csak egy honlap. Ez egy **személyre szabott tanulási környezet**, ami segít legyőzni a halogatást és rendszerezni a tudásodat az MI erejével.</p>
+        <div class="cta-group">
+            <a href="#demo" class="btn btn-primary">Kipróbálom a demót</a>
+            <a href="#about" class="btn btn-outline">Hogyan működik?</a>
         </div>
+    </header>
 
-        <div class="demo-container">
-            <div id="timer-display">25:00</div>
-            <div class="timer-controls">
-                <button class="filter-btn active" id="startBtn" onclick="toggleTimer()">Indítás</button>
-                <button class="filter-btn" onclick="resetTimer()">Alaphelyzet</button>
-            </div>
-            <p id="timer-status" style="margin-top: 20px; color: var(--accent); font-weight: 600; opacity: 0; transition: 0.3s;">Mély fókusz aktív...</p>
+    <section class="info-section" id="about">
+        <div class="feature-card">
+            <i class="fas fa-brain"></i>
+            <h3>AI Asszisztens</h3>
+            <p>Azonnali válaszok a kérdéseidre, jegyzetek automatikus vázlatolása és magyarázatok.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-clock"></i>
+            <h3>Okos Időzítő</h3>
+            <p>Tudományosan megalapozott fókusz-ciklusok, amik alkalmazkodnak a fáradtsági szintedhez.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-chart-line"></i>
+            <h3>Fejlődési Napló</h3>
+            <p>Kövesd nyomon, mennyi időt töltöttél mély fókuszban és hogyan haladsz a kurzusaiddal.</p>
         </div>
     </section>
 
-    <section id="courses" data-bg="#0a0e1a">
-        <h2 style="margin-bottom: 40px;">Elérhető kurzusok</h2>
-        <div class="filters">
-            <button class="filter-btn active" onclick="filterItems('all')">Mind</button>
-            <button class="filter-btn" onclick="filterItems('web')">Web</button>
-            <button class="filter-btn" onclick="filterItems('matek')">Matek</button>
+    <section id="demo">
+        <div style="text-align: center; margin-bottom: 50px;">
+            <h2 style="font-size: 2.5rem;">Próbáld ki a Dashboardot</h2>
+            <p style="color: #94a3b8;">Nézd meg, milyen érzés a FocusHub-on belül dolgozni.</p>
         </div>
 
-        <div class="course-grid">
-            <div class="course-card" data-cat="web" onclick="openModal('Modern Frontend', 'A legújabb technológiák: React 19 és Next.js.')">
-                <h3>Modern Frontend</h3>
-                <p style="color: var(--text-muted); margin-top: 10px;">Építs villámgyors appokat.</p>
+        <div class="dashboard">
+            <div class="db-side">
+                <h4 style="margin-bottom: 20px; color: var(--accent);">Napi célok</h4>
+                <div class="task-item"><i class="far fa-check-circle"></i> React alapok átnézése</div>
+                <div class="task-item"><i class="far fa-circle"></i> 3 fókusz-blokk teljesítése</div>
+                <div class="task-item"><i class="far fa-circle"></i> Angol szavak gyakorlása</div>
+                <button class="btn btn-outline" style="width: 100%; font-size: 0.7rem; padding: 10px;">+ Új feladat</button>
             </div>
-            <div class="course-card" data-cat="matek" onclick="openModal('Diszkrét Matek', 'Algoritmusok és logika közérthetően.')">
-                <h3>Diszkrét Matek</h3>
-                <p style="color: var(--text-muted); margin-top: 10px;">Mérnöki alapok mesterfokon.</p>
+
+            <div class="db-main">
+                <div id="timer">25:00</div>
+                <button class="btn btn-primary" onclick="toggleTimer()" id="tBtn">Fókusz indítása</button>
+                
+                <div class="ai-overlay">
+                    <div id="chat-box"><b>FocusBot:</b> Szia! Miben segíthetek a tanulásban? Próbáld ki: írd be, hogy "Segíts tanulni"</div>
+                    <div class="ai-input">
+                        <input type="text" id="ai-in" placeholder="Kérdezz az AI-tól...">
+                        <button class="btn btn-primary" style="padding: 5px 15px;" onclick="askAI()">Küldés</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="db-side" style="border-right: none; border-left: 1px solid #334155;">
+                <h4 style="margin-bottom: 20px;">Kurzus haladás</h4>
+                <div style="margin-bottom: 15px;">
+                    <div style="display:flex; justify-content: space-between; font-size: 0.8rem;"><span>Frontend</span><span>75%</span></div>
+                    <div style="height: 5px; background: #334155; border-radius: 5px; margin-top: 5px;"><div style="width: 75%; height: 100%; background: var(--primary);"></div></div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <div style="display:flex; justify-content: space-between; font-size: 0.8rem;"><span>Python AI</span><span>20%</span></div>
+                    <div style="height: 5px; background: #334155; border-radius: 5px; margin-top: 5px;"><div style="width: 20%; height: 100%; background: var(--accent);"></div></div>
+                </div>
             </div>
         </div>
     </section>
-
-    <div class="modal" id="modal" onclick="closeModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <h2 id="modalTitle"></h2>
-            <p id="modalDesc" style="color: var(--text-muted); margin: 20px 0;"></p>
-            <button class="filter-btn active" onclick="closeModal()">Bezárás</button>
-        </div>
-    </div>
 
     <script>
-        // Loader
-        window.addEventListener('load', () => {
-            setTimeout(() => document.getElementById('loader').classList.add('hidden'), 800);
-        });
-
-        // Kurzor
-        const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', e => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-        document.querySelectorAll('button, .course-card').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-        });
-
-        // Háttérváltó
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) document.body.style.backgroundColor = entry.target.dataset.bg;
-            });
-        }, { threshold: 0.5 });
-        document.querySelectorAll('section').forEach(s => observer.observe(s));
-
-        // Pomodoro Timer Logika
-        let timeLeft = 25 * 60;
-        let timerId = null;
-        const display = document.getElementById('timer-display');
-        const startBtn = document.getElementById('startBtn');
-        const statusText = document.getElementById('timer-status');
-
-        function updateDisplay() {
-            const m = Math.floor(timeLeft / 60);
-            const s = timeLeft % 60;
-            display.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        }
+        // IDŐZÍTŐ LOGIKA
+        let time = 1500;
+        let running = false;
+        let interval;
 
         function toggleTimer() {
-            if (timerId) {
-                clearInterval(timerId);
-                timerId = null;
-                startBtn.innerText = "Folytatás";
-                statusText.style.opacity = "0";
-            } else {
-                statusText.style.opacity = "1";
-                startBtn.innerText = "Szünet";
-                timerId = setInterval(() => {
-                    timeLeft--;
-                    updateDisplay();
-                    if (timeLeft <= 0) {
-                        clearInterval(timerId);
-                        alert("Idő lejárt!");
-                        resetTimer();
-                    }
+            if(!running) {
+                running = true;
+                document.getElementById('tBtn').innerText = "Szüneteltetés";
+                interval = setInterval(() => {
+                    time--;
+                    let m = Math.floor(time/60);
+                    let s = time%60;
+                    document.getElementById('timer').innerText = `${m}:${s < 10 ? '0'+s : s}`;
                 }, 1000);
+            } else {
+                clearInterval(interval);
+                running = false;
+                document.getElementById('tBtn').innerText = "Folytatás";
             }
         }
 
-        function resetTimer() {
-            clearInterval(timerId);
-            timerId = null;
-            timeLeft = 25 * 60;
-            updateDisplay();
-            startBtn.innerText = "Indítás";
-            statusText.style.opacity = "0";
-        }
+        // AI LOGIKA (Szimulált, de interaktívabb)
+        function askAI() {
+            const val = document.getElementById('ai-in').value;
+            const chat = document.getElementById('chat-box');
+            if(!val) return;
 
-        // Egyéb funkciók
-        function filterItems(cat) {
-            document.querySelectorAll('.course-card').forEach(card => {
-                card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'block' : 'none';
-            });
-        }
+            chat.innerHTML += `<br><b>Te:</b> ${val}`;
+            document.getElementById('ai-in').value = "";
 
-        function openModal(t, d) {
-            document.getElementById('modalTitle').innerText = t;
-            document.getElementById('modalDesc').innerText = d;
-            document.getElementById('modal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
+            setTimeout(() => {
+                let resp = "Értem. A FocusHub kurzusaiban találsz erről részletesebb anyagot. Még miben segíthetek?";
+                if(val.toLowerCase().includes("segíts")) resp = "Azt javaslom, oszd fel a tananyagot 3 részre és használd a fenti Pomodoro órát!";
+                chat.innerHTML += `<br><b style="color:var(--primary)">FocusBot:</b> ${resp}`;
+                chat.scrollTop = chat.scrollHeight;
+            }, 600);
         }
     </script>
 </body>
